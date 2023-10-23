@@ -3,13 +3,14 @@
  * along with a string in a particular language.
  * 
  * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ *          Daniel Corritore - added LOOK and EAT enum values
+ * @version 2023.10.22
  */
 public enum CommandWord
 {
     // A value for each command word along with its
     // corresponding user interface string.
-    GO("go"), QUIT("quit"), HELP("help"), UNKNOWN("?");
+    GO("go"), QUIT("quit"), HELP("help"), LOOK("look"), EAT("eat"), UNKNOWN("?");
     
     // The command string.
     private String commandString;

@@ -1,3 +1,4 @@
+
 /**
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
@@ -34,6 +35,7 @@ public class Game
      */
     private void createRooms()
     {
+        // Note: the objects assigned to these variable exist past the scope of this method
         Room outside, theater, pub, lab, office;
       
         // create the rooms
@@ -42,6 +44,12 @@ public class Game
         pub = new Room("in the campus pub");
         lab = new Room("in a computing lab");
         office = new Room("in the computing admin office");
+        
+        // add items
+        outside.addItem("calculator", new Item("calculator with cyrillic numerals", 1));
+        theater.addItem("podium", new Item("podium with red stains", 60));
+        theater.addItem("propbrella", new Item("an umbrella prop", 8));
+        lab.addItem("beaker", new Item("beaker with green liquid inside", 2));
         
         // initialise room exits
         outside.setExit("east", theater);
@@ -106,7 +114,15 @@ public class Game
             case UNKNOWN:
                 System.out.println("I don't know what you mean...");
                 break;
-
+            
+            case LOOK:
+                look();
+                break;
+                
+            case EAT:
+                eatFood();
+                break;
+                
             case HELP:
                 printHelp();
                 break;
@@ -124,6 +140,22 @@ public class Game
 
     // implementations of user commands:
 
+    /**
+     * Look command - prints out the description of the current room
+     */
+    private void look()
+    {
+        System.out.println(currentRoom.getLongDescription());
+    }
+    
+    /**
+     * Eat food - for now this action just prints out that the character eats food
+     */
+    private void eatFood()
+    {
+        System.out.println("You have eaten now and you are not hungry any more.");
+    }
+    
     /**
      * Print out some help information.
      * Here we print some stupid, cryptic message and a list of the 

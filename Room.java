@@ -1,6 +1,7 @@
-import java.util.Set;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Class Room - a room in an adventure game.
@@ -20,6 +21,7 @@ public class Room
 {
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
+    private HashMap<String, Item> items;
 
     /**
      * Create a room described "description". Initially, it has
@@ -31,6 +33,40 @@ public class Room
     {
         this.description = description;
         exits = new HashMap<>();
+        items = new HashMap<>();
+    }
+    
+    /**
+     * Add an item to the room
+     * @param itemName The name of the item
+     * @param item An Item object which holds a description & weight
+     */
+    public void addItem(String itemName, Item item)
+    {
+        items.put(itemName, item);
+    }
+    
+    /**
+     * Returns a string describing items in the room, for example
+     * "Items: bloody handkerchief, smoking gun".
+     * @return Details of the room's exits.
+     * 
+     */
+    public String getItemString()
+    {
+        if (items.size() == 0)
+            return "";
+            
+        String returnString = "Items:";
+        /*Set<String> keys = items.keySet();
+        for(String item : keys) {
+        */
+        for (Map.Entry<String, Item> entry : items.entrySet()) {
+            //String key = entry.getKey();
+            Item item = entry.getValue();   
+            returnString += " " + item.getLongDescription();
+        }
+        return returnString + "\n";
     }
 
     /**
@@ -60,7 +96,8 @@ public class Room
      */
     public String getLongDescription()
     {
-        return "You are " + description + ".\n" + getExitString();
+        return "You are " + description + ".\n" +
+               getItemString() + getExitString();
     }
 
     /**
