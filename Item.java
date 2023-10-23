@@ -6,7 +6,7 @@
  * "World of Zuul" is a very simple, text based adventure game.
  * 
  * An "Item" represents any object inside any room in the game.
- * Each item has a weight which will be useful if the player collects i t
+ * Each item has a weight which will be useful if the player collects it
  * 
  * @author Daniel Corritore
  * @version 2023.10.22

@@ -13,8 +13,9 @@ import java.util.Stack;
  *  rooms, creates the parser and starts the game.  It also evaluates and
  *  executes the commands that the parser returns.
  * 
- * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ * @author  Daniel Corritore
+ *          original: Michael Kölling and David J. Barnes
+ * @version 2023.10.22
  */
 
 public class Game 
@@ -41,6 +42,8 @@ public class Game
     {
         // Note: the objects assigned to these variable exist past the scope of this method
         Room outside, theater, pub, lab, office;
+        Room gym, cafeteria, fitnessRoom, courtyard, lounge;
+        Room musicRoom, artsRoom, dungeon, mausoleum, graveyard, cave, water;
       
         // create the rooms
         outside = new Room("outside the main entrance of the university");
@@ -48,26 +51,78 @@ public class Game
         pub = new Room("in the campus pub");
         lab = new Room("in a computing lab");
         office = new Room("in the computing admin office");
+        gym = new Room("in the campus gym");
+        cafeteria = new Room("in the cafeteria");
+        fitnessRoom = new Room("in a weight training room");
+        courtyard = new Room("in the campus courtyard");
+        lounge = new Room("in the campus lounge");
+        musicRoom = new Room("in the music room");
+        artsRoom = new Room("in the arts room");
+        dungeon = new Room("in the dungeon");
+        mausoleum = new Room("in a partially-underground mausoleum");
+        graveyard = new Room("in the graveyard near a mausoleum with an open door");
+        cave = new Room("in a cave with a pool of water");
+        water = new Room("in an underground river");
+        
         
         // add items
         outside.addItem("calculator", new Item("calculator with cyrillic numerals", 1));
         theater.addItem("podium", new Item("podium with red stains", 60));
         theater.addItem("propbrella", new Item("an umbrella prop", 8));
         lab.addItem("beaker", new Item("beaker with green liquid inside", 2));
+        cave.addItem("magic-cookie", new Item("a magic cookie", 0));
         
         // initialise room exits
-        outside.setExit("east", theater);
-        outside.setExit("south", lab);
+        outside.setExit("north", lab);
         outside.setExit("west", pub);
+        outside.setExit("east", theater);
 
         theater.setExit("west", outside);
 
         pub.setExit("east", outside);
 
-        lab.setExit("north", outside);
-        lab.setExit("east", office);
+        lab.setExit("north", courtyard);
+        lab.setExit("south", outside);
+        lab.setExit("east", office);        
 
         office.setExit("west", lab);
+        
+        courtyard.setExit("north", artsRoom);
+        courtyard.setExit("south", lab);        
+        courtyard.setExit("west", gym);
+        courtyard.setExit("east", cafeteria);
+        courtyard.setExit("down", dungeon);
+        
+        artsRoom.setExit("north", musicRoom);
+        artsRoom.setExit("south", courtyard);
+        artsRoom.setExit("west", fitnessRoom);
+        artsRoom.setExit("east", lounge);
+        
+        musicRoom.setExit("south", artsRoom);
+        
+        gym.setExit("north", fitnessRoom);
+        gym.setExit("east", courtyard);
+        
+        fitnessRoom.setExit("south", gym);
+        fitnessRoom.setExit("east", artsRoom);
+        
+        cafeteria.setExit("north", lounge);
+        cafeteria.setExit("west", courtyard);
+        
+        lounge.setExit("south", cafeteria);
+        lounge.setExit("west", artsRoom);
+        
+        dungeon.setExit("northeast", mausoleum);
+        dungeon.setExit("up", courtyard);
+        
+        mausoleum.setExit("southeast", dungeon);
+        mausoleum.setExit("out", graveyard);
+        
+        graveyard.setExit("in", mausoleum);
+        graveyard.setExit("north", cave);
+        
+        cave.setExit("south", graveyard);
+        cave.setExit("water", water);
 
         currentRoom = outside;  // start game outside
     }
@@ -201,7 +256,22 @@ public class Game
         else {
             // Track previous room
             roomTraverser.push(currentRoom);
+            // Then move
             currentRoom = nextRoom;
+            // Special case - swept down a river
+            if (currentRoom.getShortDescription().contains("river")) {
+                System.out.println("You get in the pool of water but soon realize you are " +
+                    currentRoom.getShortDescription() + "!");
+                System.out.println("You are carried by the current and lose consciousness.\n" +
+                    "You awaken at the end of a sewage pipe near the college entrance.\n" +
+                    "You stumble to your feet");
+
+                // Clear room traversal (no more "back"!) and reset location to the entrance
+                while (!roomTraverser.empty()) {
+                    currentRoom = roomTraverser.pop();
+                }
+            }
+            
             System.out.println(currentRoom.getLongDescription());
         }
     }
@@ -209,7 +279,7 @@ public class Game
     /**
      * Go back a room (if possible)
      */
-    void goBack()
+    private void goBack()
     {
         if (roomTraverser.empty()) {
             System.out.println("Can't go back any further; we are at the origin!");
@@ -234,5 +304,13 @@ public class Game
         else {
             return true;  // signal that we want to quit
         }
+    }
+    
+    /**
+     * Main - start point outside of BlueJ
+     */
+    public static void main(String[] args) {
+        Game game = new Game();
+        game.play();
     }
 }

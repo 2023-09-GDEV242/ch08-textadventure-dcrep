@@ -1,0 +1,8 @@
+Intermediate Level elements implemented:
+- Items added to game with descriptions and weight
+- Multiple items per room allowed
+- Added "back" command
+- "back" command allows one to go back through all rooms to the start
+- Player class STARTED, time ran out!
+
+Bonus: special action when player goes into a pool of water
