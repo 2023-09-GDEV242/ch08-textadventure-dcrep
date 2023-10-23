@@ -1,3 +1,4 @@
+import java.util.Stack;
 
 /**
  *  This class is the main class of the "World of Zuul" application. 
@@ -20,6 +21,8 @@ public class Game
 {
     private Parser parser;
     private Room currentRoom;
+    // Track room movement
+    private Stack<Room> roomTraverser;
         
     /**
      * Create the game and initialise its internal map.
@@ -28,6 +31,7 @@ public class Game
     {
         createRooms();
         parser = new Parser();
+        roomTraverser = new Stack<Room>();
     }
 
     /**
@@ -118,6 +122,10 @@ public class Game
             case LOOK:
                 look();
                 break;
+            
+            case BACK:
+                goBack();
+                break;
                 
             case EAT:
                 eatFood();
@@ -191,7 +199,23 @@ public class Game
             System.out.println("There is no door!");
         }
         else {
+            // Track previous room
+            roomTraverser.push(currentRoom);
             currentRoom = nextRoom;
+            System.out.println(currentRoom.getLongDescription());
+        }
+    }
+    
+    /**
+     * Go back a room (if possible)
+     */
+    void goBack()
+    {
+        if (roomTraverser.empty()) {
+            System.out.println("Can't go back any further; we are at the origin!");
+        }
+        else {
+            currentRoom = roomTraverser.pop();
             System.out.println(currentRoom.getLongDescription());
         }
     }
